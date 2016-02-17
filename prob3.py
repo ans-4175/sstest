@@ -2,6 +2,7 @@ import sys
 import multiprocessing
 
 ncores = multiprocessing.cpu_count()
+core_multipliers = 4
 
 """
 counting each elements by key value granular
@@ -14,7 +15,7 @@ def MapReducer(param):
   for el in arr:
     els = el.split(" ")
     if len(els) > 1:
-      bval = els[0] == nama and els[1] == phone 
+      bval = els[0].lower() == nama.lower() and els[1] == phone 
       results = results or bval
   return results
 """
@@ -38,7 +39,9 @@ def chunks(lst, n):
 def initialize(filename):
   global partitioned_text
   text = readbyline(filename)
-  partitioned_text = list(chunks(text, len(text) / ncores))
+  idealchunks = (len(text) / (ncores*core_multipliers))
+  numchunks = idealchunks if (idealchunks > 0) else len(text)
+  partitioned_text = list(chunks(text, numchunks))
   return partitioned_text
 
 def check_blacklist(_nama,_phone):

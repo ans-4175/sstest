@@ -2,6 +2,7 @@ import sys
 import multiprocessing
 
 ncores = multiprocessing.cpu_count()
+core_multipliers = 1024
 
 """
 read by lines
@@ -55,19 +56,22 @@ def kv_sort (a, b):
     return 1
  
 if __name__ == '__main__':
-  if (len(sys.argv) != 3):
-    print "Provide file name input and output"
+  if (len(sys.argv) != 2):
+    print "Provide file name input"
     sys.exit(1)
 
   text = readbyline(sys.argv[1])
+  splitfile = sys.argv[1].split(".")
   pool = multiprocessing.Pool(processes=ncores,)
-  partitioned_text = list(chunks(text, len(text) / ncores))
+  idealchunks = (len(text) / (ncores*core_multipliers))
+  numchunks = idealchunks if (idealchunks > 0) else len(text)
+  partitioned_text = list(chunks(text, numchunks))
   splitted_text = pool.map(Map, partitioned_text)
   groupped_text = Grouping(splitted_text)
   sorted_text = pool.map(Reduce, groupped_text.items())
   sorted_text.sort(kv_sort)
 
-  with open(sys.argv[2], "ab") as myfile:
+  with open(splitfile[0]+".out", "w+") as myfile:
     for kv in sorted_text:
       for i in range(0,kv[1]):
         myfile.write(kv[0])
