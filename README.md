@@ -7,7 +7,7 @@ It will produce file output with name `[filename].out`
 i.e
 ```
 python seeding1.py age.jkt 10000000
-python prob.py age.jkt
+python prob1.py age.jkt
 ```
 
 ## Problem 2
