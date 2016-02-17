@@ -1,6 +1,23 @@
 import sys
-from multiprocessing import Pool
+import multiprocessing
 
+ncores = multiprocessing.cpu_count()
+
+"""
+read by lines
+"""
+def readbyline(path):
+  word_list = []
+  f = open(path, "r")
+  for line in f:
+    word_list.append (line)
+  return (''.join(word_list)).split()
+"""
+chunks list
+"""
+def chunks(lst, n):
+  for i in xrange(0, len(lst), n):
+    yield lst[i:i+n]
 """
 counting each elements by key value granular
 """
@@ -27,21 +44,6 @@ reduce by summing occurences
 def Reduce(Maparr):
   return (Maparr[0], sum(kv[1] for kv in Maparr[1]))
 """
-read by lines
-"""
-def readbyline(path):
-  word_list = []
-  f = open(path, "r")
-  for line in f:
-    word_list.append (line)
-  return (''.join(word_list)).split()
-"""
-chunks list
-"""
-def chunks(lst, n):
-  for i in xrange(0, len(lst), n):
-    yield lst[i:i+n]
-"""
 Sort by value ascending
 """
 def kv_sort (a, b):
@@ -57,10 +59,9 @@ if __name__ == '__main__':
     print "Provide file name input and output"
     sys.exit(1)
 
-  nthread = 4
   text = readbyline(sys.argv[1])
-  pool = Pool(processes=nthread,)
-  partitioned_text = list(chunks(text, len(text) / nthread))
+  pool = multiprocessing.Pool(processes=ncores,)
+  partitioned_text = list(chunks(text, len(text) / ncores))
   splitted_text = pool.map(Map, partitioned_text)
   groupped_text = Grouping(splitted_text)
   sorted_text = pool.map(Reduce, groupped_text.items())
