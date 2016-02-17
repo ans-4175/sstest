@@ -5,7 +5,7 @@ ncores = multiprocessing.cpu_count()
 core_multipliers = 4
 
 """
-counting each elements by key value granular
+check truthness from parameters
 """
 def MapReducer(param):
   nama = param[0]

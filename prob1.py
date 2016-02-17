@@ -45,7 +45,7 @@ reduce by summing occurences
 def Reduce(Maparr):
   return (Maparr[0], sum(kv[1] for kv in Maparr[1]))
 """
-Sort by value ascending
+Sort by age value ascending
 """
 def kv_sort (a, b):
   if int(a[0]) > int(b[0]):
